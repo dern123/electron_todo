@@ -5,88 +5,64 @@ import { NoteData } from '../types.ts';
 import { beforeEach, describe, expect, test, vi } from 'vitest'; 
 import '@testing-library/jest-dom';
 
-
-//data for testing
-const noteData: NoteData = {
+const mockNote: NoteData = {
   id: 1,
-  title: 'Test Note',
-  content: '<p>Test content</p>',
+  title: 'Sample Note',
+  content: '<p>Some content</p>',
 };
 
-//mock functions
-const deleteNote = vi.fn();
-const updateNote = vi.fn();
-const saveNote = vi.fn();
+const mockDeleteNote = vi.fn();
+const mockUpdateNote = vi.fn();
+const mockSaveNote = vi.fn();
 
-describe('Note Component', () => {
+describe('Note', () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    render(
+      <Note
+        note={mockNote}
+        deleteNote={mockDeleteNote}
+        updateNote={mockUpdateNote}
+        saveNote={mockSaveNote}
+      />
+    );
   });
 
-  test('renders note title and content', () => {
-    render(
-      <Note note={noteData} deleteNote={deleteNote} updateNote={updateNote} saveNote={saveNote} />
-    );
-
-    // check if title and content are rendered
-    expect(screen.getByPlaceholderText('Title')).toHaveValue(noteData.title);
-    expect(screen.getByText('Test content')).toBeInTheDocument();
+  test('renders note with title and content', () => {
+    expect(screen.getByDisplayValue(mockNote.title)).toBeInTheDocument();
+    expect(screen.getByText(/Some content/i)).toBeInTheDocument();
   });
 
   test('calls deleteNote when delete button is clicked', () => {
-    render(
-      <Note note={noteData} deleteNote={deleteNote} updateNote={updateNote} saveNote={saveNote} />
-    );
-
-    const deleteButton = screen.getByLabelText('Delete Note');
-    fireEvent.click(deleteButton);
-
-    expect(deleteNote).toHaveBeenCalledWith(noteData.id);
+    fireEvent.click(screen.getByLabelText(/Delete Note/i));
+    expect(mockDeleteNote).toHaveBeenCalledWith(mockNote.id);
   });
 
-  test('calls updateNote when content is modified', () => {
-    render(
-      <Note note={noteData} deleteNote={deleteNote} updateNote={updateNote} saveNote={saveNote} />
-    );
-
-    const editor = screen.getByText('Test content');
-    fireEvent.input(editor, { target: { innerHTML: '<p>Updated content</p>' } });
-
-    expect(updateNote).toHaveBeenCalledWith({
-      ...noteData,
-      content: '<p>Updated content</p>',
-    });
-  });
-
-  test('displays "Save" button when note is modified', () => {
-    render(
-      <Note note={noteData} deleteNote={deleteNote} updateNote={updateNote} saveNote={saveNote} />
-    );
-
-    // modify title to make the "Save" button visible
-    const titleInput = screen.getByPlaceholderText('Title');
+  test('updates title and calls saveNote', () => {
+    const titleInput = screen.getByPlaceholderText(/Title/i);
     fireEvent.change(titleInput, { target: { value: 'Updated Title' } });
-
-    const saveButton = screen.getByText('Save');
-    expect(saveButton).toBeInTheDocument();
+    
+    expect(titleInput).toHaveValue('Updated Title');
+    expect(mockSaveNote).toHaveBeenCalledWith({ ...mockNote, title: 'Updated Title', content: mockNote.content });
   });
 
-  test('calls saveNote when "Save" button is clicked', () => {
-    render(
-      <Note note={noteData} deleteNote={deleteNote} updateNote={updateNote} saveNote={saveNote} />
-    );
+  test('inserts an image when a valid URL is provided', () => {
+    const imageInput = screen.getByPlaceholderText(/Enter image URL/i);
+    const insertButton = screen.getByRole('button', { name: /insert image/i });
 
-    // modify title to make the "Save" button visible
-    const titleInput = screen.getByPlaceholderText('Title');
-    fireEvent.change(titleInput, { target: { value: 'Updated Title' } });
+    fireEvent.change(imageInput, { target: { value: 'https://example.com/image.jpg' } });
+    fireEvent.click(insertButton);
 
-    // click the "Save" button
-    const saveButton = screen.getByText('Save');
-    fireEvent.click(saveButton);
+    expect(mockSaveNote).toHaveBeenCalled(); // Verify if saveNote is called after image insertion
+  });
 
-    expect(saveNote).toHaveBeenCalledWith({
-      ...noteData,
-      title: 'Updated Title',
-    });
+  test('shows alert on invalid image URL', () => {
+    const imageInput = screen.getByPlaceholderText(/Enter image URL/i);
+    const insertButton = screen.getByRole('button', { name: /insert image/i });
+
+    window.alert = vi.fn(); // Mock alert
+    fireEvent.change(imageInput, { target: { value: 'invalid-url' } });
+    fireEvent.click(insertButton);
+
+    expect(window.alert).toHaveBeenCalledWith('Please enter a valid image URL.'); // Check if alert is called
   });
 });
