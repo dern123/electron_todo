@@ -1,6 +1,6 @@
 {
-  "name": "codetegaelectron",
-  "productName": "codetegaelectron",
+  "name": "notes_electron",
+  "productName": "notes_electron",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".webpack/main",
