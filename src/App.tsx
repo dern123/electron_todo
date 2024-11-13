@@ -3,6 +3,16 @@ import Note from './components/Note.tsx';
 import { NoteData } from './types.ts';
 import './index.css';
 
+declare global {
+  interface Window {
+    electronAPI: {
+      loadNotes: () => Promise<NoteData[]>;
+      saveNotes: (notes: NoteData[]) => void;
+      deleteNote: (id: number) => void;
+    };
+  }
+}
+
 const App: React.FC = () => {
   const [notes, setNotes] = useState<NoteData[]>([]);
 
@@ -26,6 +36,14 @@ const App: React.FC = () => {
     setNotes([newNote, ...notes]); // Prepend the new note to the existing notes
   };
 
+  const deleteNote = (id: number) => {
+    // Remove the note from the local state first
+    setNotes(notes.filter(note => note.id !== id));
+  
+    // Call the main process to delete the note from the file/database
+    window.electronAPI.deleteNote(id);  // You need to handle this in the main process
+  };
+  
   return (
     <div className="app p-4">
       {/* <h1 className="text-2xl font-bold mb-4">My Notes App</h1> */}
@@ -37,7 +55,7 @@ const App: React.FC = () => {
           <Note 
             key={note.id}
             note={note}
-            deleteNote={() => setNotes(notes.filter(n => n.id !== note.id))}
+            deleteNote={() => deleteNote(note.id)} // Pass a function to delete the note
             updateNote={saveNote} // Directly call saveNote on update
             saveNote={saveNote}    // Pass saveNote for auto-save functionality
           />
