@@ -4,16 +4,23 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 module.exports = {
   packagerConfig: {
     asar: true,
+    icon: './src/assets/app-icon',  // Іконка .ico без розширення
   },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
-      config: {},
+      config: {
+        name: 'myApp',               // Ім'я застосунку
+        authors: 'Denis Strizhalov', // Автор
+        exe: 'myApp.exe',            // Ім'я файлу .exe
+        setupExe: 'myAppSetup.exe',  // Ім'я інсталятора
+        setupIcon: './src/assets/app-icon.ico', // Іконка для інсталятора
+      },
     },
     {
       name: '@electron-forge/maker-zip',
-      platforms: ['darwin'],
+      platforms: ['win32'], // Змінив на Windows
     },
     {
       name: '@electron-forge/maker-deb',
@@ -48,8 +55,6 @@ module.exports = {
         },
       },
     },
-    // Fuses are used to enable/disable various Electron functionality
-    // at package time, before code signing the application
     new FusesPlugin({
       version: FuseVersion.V1,
       [FuseV1Options.RunAsNode]: false,
