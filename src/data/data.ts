@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
-import { NoteData } from '../types.ts';
+import { NoteData } from '../types';
 
 const dataPath = path.join(app.getPath('userData'), 'notes.json');
 

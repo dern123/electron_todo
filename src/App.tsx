@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Note from './components/Note.tsx';
-import { NoteData } from './types.ts';
+import Note from './components/Note';
+import { NoteData } from './types';
 import './index.css';
 
 declare global {
