@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
-import { NoteData } from '../types';
-import NoteTitle from './NoteTitle';
-import NoteEditor from './NoteEditor';
-import ImageInput from './ImageInput';
+import { NoteData } from '../types.ts';
+import NoteTitle from './NoteTitle.tsx';
+import NoteEditor from './NoteEditor.tsx';
+import ImageInput from './ImageInput.tsx';
 
 interface NoteProps {
   note: NoteData;
