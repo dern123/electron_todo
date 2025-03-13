@@ -12,7 +12,7 @@ const NoteTitle: React.FC<NoteTitleProps> = ({ title, onChange }) => {
       value={title} // Bind title prop
       onChange={(e) => onChange(e.target.value)} //  input changes
       placeholder="Title" 
-      className="w-[98%] mb-2 p-2 border rounded" 
+      className="w-full break-words mb-2 p-2 border rounded" 
     />
   );
 };

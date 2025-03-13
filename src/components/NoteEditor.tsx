@@ -6,8 +6,21 @@ interface NoteEditorProps {
 }
 
 const NoteEditor: React.FC<NoteEditorProps> = ({ editor }) => {
+  if (!editor) {
+    return <div className="w-full min-h-[100px] p-2 border rounded bg-gray-100">Loading...</div>;
+  }
+
   return (
-    <EditorContent className="w-full mb-2 p-2 border rounded" editor={editor} />
+    <EditorContent
+      editor={editor}
+      className="w-full max-w-full min-h-[100px] p-2 border rounded break-words overflow-hidden"
+      style={{
+        wordBreak: "break-word",
+        whiteSpace: "normal",
+        overflowWrap: "break-word",
+        maxWidth: "100%",
+      }}
+    />
   );
 };
 

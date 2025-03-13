@@ -5,16 +5,18 @@ module.exports = {
   packagerConfig: {
     asar: true,
     icon: './src/assets/app-icon',  // Іконка .ico без розширення
+    name: 'notes_electron',         // Ім'я застосунку повинно збігатися
+    executableName: 'notes_electron',// Ім'я .exe файлу (без розширення)
   },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
       config: {
-        name: 'myApp',               // Ім'я застосунку
-        authors: 'Denis Strizhalov', // Автор
-        exe: 'myApp.exe',            // Ім'я файлу .exe
-        setupExe: 'myAppSetup.exe',  // Ім'я інсталятора
+        name: 'notes_electron',         // Ім'я застосунку
+        authors: 'Denis Strizhalov',
+        exe: 'notes_electron.exe',      // Ім'я файлу .exe
+        setupExe: 'notes_electronSetup.exe', // Ім'я інсталятора
         setupIcon: './src/assets/app-icon.ico', // Іконка для інсталятора
       },
     },

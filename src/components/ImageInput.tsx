@@ -8,7 +8,7 @@ interface ImageInputProps {
 
 const ImageInput: React.FC<ImageInputProps> = ({ imageUrl, onChange, onInsert }) => {
   return (
-    <div className="flex items-center mt-4">
+    <div className="flex items-center mt-4 w-full">
       <input
         type="text"
         value={imageUrl}
